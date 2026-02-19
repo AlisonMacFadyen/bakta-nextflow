@@ -19,7 +19,7 @@ nextflow run main.nf \
     --outdir results
 ```
 
-Bakta accepts compressed FASTA files.
+Bakta accepts both compressed and uncompressed FASTA files.
 
 ## Parameters
 
