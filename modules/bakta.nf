@@ -26,13 +26,19 @@ process BAKTA {
     script:
     def timeout_secs = task.time ? task.time.toSeconds() : 14400
     """
-    timeout --kill-after=30 ${timeout_secs} \
     bakta --output ${fasta.simpleName} \
         --genus ${params.genus} \
         --compliant \
         --threads ${task.cpus} \
         --prefix ${fasta.simpleName} \
         --db ${bakta_database} \
-        ${fasta}
+        ${fasta} &
+    BAKTA_PID=\$!
+    ( sleep ${timeout_secs} && kill \$BAKTA_PID 2>/dev/null && sleep 30 && kill -9 \$BAKTA_PID 2>/dev/null ) &
+    TIMER_PID=\$!
+    wait \$BAKTA_PID
+    STATUS=\$?
+    kill \$TIMER_PID 2>/dev/null
+    exit \$STATUS
     """
 }
