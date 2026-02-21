@@ -26,7 +26,7 @@ process BAKTA {
     script:
     def timeout_secs = task.time ? task.time.toSeconds() : 14400
     """
-    timeout ${timeout_secs} \
+    timeout --kill-after=30 ${timeout_secs} \
     bakta --output ${fasta.simpleName} \
         --genus ${params.genus} \
         --compliant \
